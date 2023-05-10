@@ -35,8 +35,12 @@ class GUI:
         # root_label.pack()
 
         alice_private = Entry(self.frame)
-        alice_private.grid(row=3, column=0)
+        alice_private.grid(row=4, column=1, sticky="W")
 
+        bob = Label(self.frame, text="Bob", font="Arial 11 bold")
+        bob.grid(row=3, column=3, sticky="W")
+        bob_private_label = Label(self.frame, text="Xb", font="Arial 9")
+        bob_private_label.grid(row=4, column=3, sticky="W")
         bob_private = Entry(self.frame)
         alice_private.grid(row=3, column=4)
 
