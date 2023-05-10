@@ -8,7 +8,7 @@ class GUI:
         self.window = Tk()
         self.frame = Frame(self.window)
         self.window.title("Diffie hellman Key Exchange")
-        self.window.geometry("500x300")
+        self.window.geometry("600x300")
         self.frame.pack()
 
         def cmd():
@@ -16,24 +16,22 @@ class GUI:
 
         generate_button = Button(self.frame, text="Generate Prime", font="CourierNew 9", command=cmd)
         generate_button.grid(row=0, column=2, pady=10)
-        # generate_button.place(relx=0.5, rely=0.15, anchor=CENTER)
-        # generate_button.pack()
 
         self.window.mainloop()
 
     def generate(self):
         q = generate_prime_number()
-        prime_label = Label(self.frame, text="q = " + str(q), font="Arial 9")
+        prime_label = Label(self.frame, text="q = " + str(q), font="Arial 10 bold")
         prime_label.grid(row=1, column=2)
-        # prime_label.place(relx=0.5, rely=0.25, anchor=CENTER)
-        # prime_label.pack()
 
         a = find_primitive(q)
-        root_label = Label(self.frame, text="a = " + str(a), font="Arial 9")
-        root_label.grid(row=2, column=2)
-        # root_label.place(relx=0.5, rely=0.30, anchor=CENTER)
-        # root_label.pack()
+        root_label = Label(self.frame, text="a = " + str(a), font="Arial 10 bold")
+        root_label.grid(row=2, column=2, pady=(2, 5))
 
+        alice = Label(self.frame, text="Alice", font="Arial 11 bold")
+        alice.grid(row=3, column=0, sticky="W")
+        alice_private_label = Label(self.frame, text="Xa", font="Arial 9")
+        alice_private_label.grid(row=4, column=0, padx=(5, 1), sticky="W")
         alice_private = Entry(self.frame)
         alice_private.grid(row=4, column=1, sticky="W")
 
@@ -42,7 +40,53 @@ class GUI:
         bob_private_label = Label(self.frame, text="Xb", font="Arial 9")
         bob_private_label.grid(row=4, column=3, sticky="W")
         bob_private = Entry(self.frame)
-        alice_private.grid(row=3, column=4)
+        bob_private.grid(row=4, column=4, padx=(1, 5), sticky="W")
+
+
+        def cmd():
+            Xa = alice_private.get()
+            Xb = bob_private.get()
+            self.simulate(q, a, int(Xa), int(Xb))
+
+        simulate_button = Button(self.frame, text="Simulate", font="CourierNew 8", command=cmd)
+        simulate_button.grid(row=9, column=2, pady=5)
+
+    def simulate(self, q: int, a: int, Xa: int, Xb: int):
+        alice_public = create_public_key(a, Xa, q)
+        bob_public = create_public_key(a, Xb, q)
+
+        alice_public_label_formula = Label(self.frame, text="Ya", font="Arial 10")
+        alice_public_label_formula.grid(row=5, column=0, padx=(5, 0), sticky="W")
+        alice_public_label_formula = Label(self.frame, text="= a^Xa mod q", font="Arial 10")
+        alice_public_label_formula.grid(row=5, column=1, sticky="W")
+        alice_public_label = Label(self.frame, text="= " + str(alice_public), font="Arial 10")
+        alice_public_label.grid(row=6, column=1, sticky="W")
+
+        bob_public_label_formula = Label(self.frame, text="Yb", font="Arial 10")
+        bob_public_label_formula.grid(row=5, column=3, sticky="W")
+        bob_public_label_formula = Label(self.frame, text="= a^Xb mod q", font="Arial 10")
+        bob_public_label_formula.grid(row=5, column=4, padx=(0, 5), sticky="W")
+        bob_public_label = Label(self.frame, text="= " + str(bob_public), font="Arial 10")
+        bob_public_label.grid(row=6, column=4, padx=(0, 5), sticky="W")
+
+        alice_session = create_session_key(bob_public, Xa, q)
+        bob_session = create_session_key(alice_public, Xb, q)
+
+        alice_session_label_formula = Label(self.frame, text="K", font="Arial 10")
+        alice_session_label_formula.grid(row=7, column=0, padx=(5, 0), sticky="W")
+        alice_session_label_formula = Label(self.frame, text="= Yb^Xa mod q", font="Arial 10")
+        alice_session_label_formula.grid(row=7, column=1, sticky="W")
+        alice_session_label = Label(self.frame, text="= " + str(alice_session), font="Arial 10")
+        alice_session_label.grid(row=8, column=1, sticky="W")
+
+        bob_session_label_formula = Label(self.frame, text="K", font="Arial 10")
+        bob_session_label_formula.grid(row=7, column=3, sticky="W")
+        bob_session_label_formula = Label(self.frame, text="= Ya^Xb mod q", font="Arial 10")
+        bob_session_label_formula.grid(row=7, column=4, padx=(0, 5), sticky="W")
+        bob_session_label = Label(self.frame, text="= " + str(bob_session), font="Arial 10")
+        bob_session_label.grid(row=8, column=4, padx=(0, 5), sticky="W")
+
+
 
 
 
