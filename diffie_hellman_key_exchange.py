@@ -1,6 +1,9 @@
+import tkinter
+
 from generate_prime_number import generate_prime_number
 from get_primitive_root import find_primitive
 from tkinter import *
+from tkinter import messagebox
 
 
 class GUI:
@@ -42,11 +45,24 @@ class GUI:
         bob_private = Entry(self.frame)
         bob_private.grid(row=4, column=4, padx=(1, 5), sticky="W")
 
-
         def cmd():
             Xa = alice_private.get()
             Xb = bob_private.get()
-            self.simulate(q, a, int(Xa), int(Xb))
+            error_messages = []
+            if len(Xa) <= 0 or len(Xb) <= 0:
+                error_messages.append("Key can't be empty")
+            if len(Xa) < 10 or len(Xb) < 10:
+                error_messages.append("Key must be 10 digits or more")
+            try:
+                if int(Xa) >= q or int(Xb) >= q:
+                    error_messages.append("Key must be less than prime")
+            except ValueError:
+                error_messages.append("Key must be decimal digits")
+            try:
+                assert (len(error_messages) == 0)
+                self.simulate(q, a, int(Xa), int(Xb))
+            except AssertionError:
+                tkinter.messagebox.showerror('Key Error', "\n".join(error_messages))
 
         simulate_button = Button(self.frame, text="Simulate", font="CourierNew 8", command=cmd)
         simulate_button.grid(row=9, column=2, pady=5)
@@ -65,7 +81,7 @@ class GUI:
         bob_public_label_formula = Label(self.frame, text="Yb", font="Arial 10")
         bob_public_label_formula.grid(row=5, column=3, sticky="W")
         bob_public_label_formula = Label(self.frame, text="= a^Xb mod q", font="Arial 10")
-        bob_public_label_formula.grid(row=5, column=4, padx=(0, 5), sticky="W")
+        bob_public_label_formula.grid(row=5, column=4, padx=(0, 5), sticky="W"
         bob_public_label = Label(self.frame, text="= " + str(bob_public), font="Arial 10")
         bob_public_label.grid(row=6, column=4, padx=(0, 5), sticky="W")
 
@@ -85,9 +101,6 @@ class GUI:
         bob_session_label_formula.grid(row=7, column=4, padx=(0, 5), sticky="W")
         bob_session_label = Label(self.frame, text="= " + str(bob_session), font="Arial 10")
         bob_session_label.grid(row=8, column=4, padx=(0, 5), sticky="W")
-
-
-
 
 
 def input_secret_key(name: str, q: int):

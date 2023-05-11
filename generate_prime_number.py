@@ -21,10 +21,11 @@ def random_odd_number(min_digit: int, max_digit: int):
 
 
 def get_low_level_prime(min_digit: int = 20, max_digit: int = 21):
+    trials = 0
     while True:
         # Obtain a random odd number
+        trials += 1
         prime_candidate = random_odd_number(min_digit, max_digit)
-        print(f"Checking low-level candidate: {prime_candidate}")
 
         # Test divisibility by pre-generated primes
         for divisor in first_primes_list:
@@ -32,21 +33,20 @@ def get_low_level_prime(min_digit: int = 20, max_digit: int = 21):
                 break
         # If no divisor found, return value
         else:
-            print(f"Chose low-level candidate: {prime_candidate}")
+            print(f"Chose low-level candidate: {prime_candidate} after {trials} trials")
             return prime_candidate
 
 
 def pass_miller_rabin_test(miller_rabin_candidate, prime_error_probability=pow(1 / 2, 128)):
+    print(f"Testing maybe prime candidate {miller_rabin_candidate} with miller rabin test")
     max_divisions_by_two = 0  # k
     even_component = miller_rabin_candidate - 1  # n - 1
     while even_component % 2 == 0:
-        print(f"Dividing {even_component} by 2")
         even_component //= 2  # q
         max_divisions_by_two += 1
     assert (2 ** max_divisions_by_two * even_component == miller_rabin_candidate - 1)
 
     def trial_composite(round_tester):
-        print(f"Testing prime candidate: {miller_rabin_candidate} with round tester: {round_tester}")
         if pow(round_tester, even_component, miller_rabin_candidate) == 1:  # if a^q mod n == 1
             return False  # False means candidate might be prime
         for i in range(max_divisions_by_two):
@@ -64,7 +64,10 @@ def pass_miller_rabin_test(miller_rabin_candidate, prime_error_probability=pow(1
     for i in range(number_of_trials):
         round_tester = random.randrange(2, miller_rabin_candidate)
         if trial_composite(round_tester):
+            print(f"Failed after {i + 1} trials")
             return False
+    print(f"{miller_rabin_candidate} passed {number_of_trials} trials \n"
+          f"With error probability of {prime_error_probability}")
     return True
 
 
