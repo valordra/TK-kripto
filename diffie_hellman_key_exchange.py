@@ -2,6 +2,7 @@ import tkinter
 
 from generate_prime_number import generate_prime_number
 from get_primitive_root import find_primitive
+from sympy.ntheory.residue_ntheory import primitive_root
 from tkinter import *
 from tkinter import messagebox
 
@@ -27,7 +28,7 @@ class GUI:
         prime_label = Label(self.frame, text="q = " + str(q), font="Arial 10 bold")
         prime_label.grid(row=1, column=2)
 
-        a = find_primitive(q)
+        a = primitive_root(q)
         root_label = Label(self.frame, text="a = " + str(a), font="Arial 10 bold")
         root_label.grid(row=2, column=2, pady=(2, 5))
 
@@ -81,7 +82,7 @@ class GUI:
         bob_public_label_formula = Label(self.frame, text="Yb", font="Arial 10")
         bob_public_label_formula.grid(row=5, column=3, sticky="W")
         bob_public_label_formula = Label(self.frame, text="= a^Xb mod q", font="Arial 10")
-        bob_public_label_formula.grid(row=5, column=4, padx=(0, 5), sticky="W"
+        bob_public_label_formula.grid(row=5, column=4, padx=(0, 5), sticky="W")
         bob_public_label = Label(self.frame, text="= " + str(bob_public), font="Arial 10")
         bob_public_label.grid(row=6, column=4, padx=(0, 5), sticky="W")
 

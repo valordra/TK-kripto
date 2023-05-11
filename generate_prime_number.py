@@ -77,7 +77,7 @@ def generate_prime_number(min_digit: int = 20, max_digit: int = 21, prime_error_
         if not pass_miller_rabin_test(prime_candidate, prime_error_probability):
             continue
         else:
-            print("Maybe prime is: \n", prime_candidate)
+            print("Maybe prime is:", prime_candidate)
             return prime_candidate
 
 
